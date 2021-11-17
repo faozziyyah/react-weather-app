@@ -33,7 +33,7 @@ function App() {
               .then(forecastData => {
                   setForecast(forecastData.list);
                   console.log(forecastData.list);
-              })
+              });
       }
   }
 
