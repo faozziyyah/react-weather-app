@@ -33,6 +33,7 @@ Users should be able to:
 
 - Solution URL: (https://github.com/faozziyyah/react-weather-app)
 - Live Site URL: (https://view-your-weather.netlify.app/)
+- Github Pages: (https://faozziyyah.github.io/react-weather-app/)
 
 ## My process
 
