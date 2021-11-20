@@ -32,7 +32,7 @@ Users should be able to:
 ### Links
 
 - Solution URL: (https://github.com/faozziyyah/react-weather-app)
-- Live Site URL: (https://faozziyyah.github.io/keeper-app/)
+- Live Site URL: (https://view-your-weather.netlify.app/)
 
 ## My process
 
