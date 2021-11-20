@@ -1,115 +1,189 @@
-/* eslint-disable no-lone-blocks */
-import React, { useState } from 'react';
-import styles from './css/Page.Module.css';
-import searchImg from './assets/Vector.png';
-import location from './assets/Location.png';
-import Forecast from './components/Forecast';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import Weather from "./components/Weather";
+import Forecast from "./components/Forecast";
+import HourlyForecast from "./components/HourlyForecast";
+import searchImg from "../src/assets/Vector.png";
+import styled from "styled-components";
+import { createGlobalStyle } from "styled-components";
+import { Loader } from 'semantic-ui-react';
+import { Link, Routes, Route} from 'react-router-dom';
+import Current from "./components/Current";
 
-const api = {
-  key: "5ee5730275c2be88687659f263c66764",
-  base: "https://api.openweathermap.org/data/2.5/"
-} 
+const url = 'https://api.openweathermap.org/data/2.5/onecall'
+const base= "https://api.openweathermap.org/data/2.5/"
+const apiKey = '5ee5730275c2be88687659f263c66764'
+
+const GlobalStyle = createGlobalStyle`
+    body{
+        width: 100%;
+    }
+`;
+
+const SearchBox = styled.div`
+    background-color: rgba(255,255,255, 0.1);
+    display: flex;
+    align-items: center;
+    width: 78%;
+    margin: auto;
+    margin-top: 2em;
+    border-radius: 10px;
+    padding-left: 1em;
+`;
+
+const SearchBar = styled.input`
+    background-color: transparent;
+    border: none;
+    outline: none;
+    width: 80%;
+    padding-left: 10px;
+    margin-right: -0.05em;
+    ::placeholder,
+  ::-webkit-input-placeholder {
+    color: #fff;
+  }
+`;
+
+const Button = styled.button`
+    background-color: #8862fc;
+    color: #fff;
+    border: none;
+    outline: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    padding: 15px 1em;
+    border-radius: 15px;
+`;
+
+const Main = styled.div`
+    background: #7047eb;
+    width: 90%;
+    height: 100vh;
+    margin: auto;
+    padding-top: 2em;
+    padding-bottom: 15em;
+`;
+
+const Footer = styled.div`
+display: flex;
+width: 90%;
+margin: auto;
+justify-content: space-around;
+margin-top: 3em;
+`;
+
+const HourlyWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    margin: auto;
+    margin-top: 2em;
+    color: #fff;
+`;
+
+const HourlyContainer = styled.div`
+    width: 100%;
+    margin: auto;
+    background-color: rgba(255,255,255, 0.1);
+    display: flex;
+    justify-content: space-around;
+    border-radius: 10px;
+`;
 
 function App() {
 
-  const [query, setQuery] = useState('lagos');
-  const [weather, setWeather] = useState('');
-  const [forecasts, setForecast] = useState([]);
+    const [latitude, setLatitude] = useState(null);
+    const [longitude, setLongitude] = useState(null);  
+    const [city, setCity] = useState('');
+    const [temprature, setTemprature] = useState(null);
+    const [icon, setIcon] = useState('');
+    const [description, setDescription] = useState('');
+    const [forecast, setForecast] = useState([]);
+    const [hourlyForecast, setHourlyForecast] = useState([]);
+    const [loading, setloading] = useState(true);
 
-  const search = evt => {
-      if (evt.key === "Enter") {
-                       // eslint-disable-next-line no-lone-blocks
-                       {/* request to fetch the current weather */}
-          fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
-              .then(res => res.json())
-              .then(result => {
-                  setWeather(result);
-                  console.log(result);
-              });
-              
-              {/* request to fetch the 5days/3hourly weather forecast */}
-          fetch(`${api.base}forecast?q=${query}&cnt=5&units=metric&APPID=${api.key}`)
-              .then(data => data.json())
-              .then(forecastData => {
-                  setForecast(forecastData.list);
-                  console.log(forecastData.list);
-              });
-      }
-  }
+    useEffect(() => {
 
-  const dateInfo = (d) => {
-    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        navigator.geolocation.getCurrentPosition(function (position) {
+            setLatitude(position.coords.latitude);
+            setLongitude(position.coords.longitude);
+          });
 
-    let day = days[d.getDay()];
-    let date = d.getDate();
-    let month = months[d.getMonth()];
-    let year = d.getFullYear();
+        axios.get(`${url}?lat=${latitude}&lon=${longitude}&exclude=minutely&appid=${apiKey}&units=metric`)
+        .then((weatherData) => {
+            console.log(weatherData.data);
+            setloading(false);
+            setTemprature(weatherData.data.current.temp);
+            setCity(weatherData.data.timezone)
+            setDescription(weatherData.data.current.weather[0].main);
+            setIcon(weatherData.data.current.weather[0].icon);
+            setForecast(weatherData.data.daily)
+        })
 
-    return `${day} ${date} ${month} ${year}`
-  }
+        axios.get(`${base}forecast?lat=${latitude}&lon=${longitude}&cnt=7&appid=${apiKey}&units=metric`)
+        .then((hourlyData) => {
+            console.log(hourlyData.data.list);
+            setHourlyForecast(hourlyData.data.list)
+        })
 
-  return (
-    <div className={styles.app}>
-    <main className={styles.main}>
-      <div className={styles.searchbox}>
-        <img src={searchImg} alt={searchImg} />
-        <input 
-          type="text" 
-          className={styles.searchbar} 
-          placeholder="Lagos, Nigeria"
-          onChange={e => setQuery(e.target.value)}
-          value={query}
-          onKeyPress={search}
-        />
-        <button type="button" className={styles.btn} onClick={search}>search</button>
-      </div>
+    }, [latitude, longitude])
 
-      {(typeof weather.main != "undefined") ? (
+    return (
+        <Main className="app">
+            <Routes>
+            <Route path="/current/*" element={<Current />} />
+            </Routes>
+            <GlobalStyle /> 
 
-        <div className={styles.container}>
-            <h1 className={styles.h1}>Next Forecast</h1>
-            <section className={styles.details}>
-                {forecasts.map((forecast, index) => 
-                     <Forecast 
-                          key = {index}
-                          forecast = {forecast}
-                     />
-                )}
-            </section>
+            <SearchBox className="search-box">
+            <img src={searchImg} alt={searchImg} />
+            <SearchBar 
+                type="text" 
+                className="" 
+                placeholder="Lagos, Nigeria"
+            />
+            <Link to="/current">
+              <Button >Search</Button>
+            </Link>
+        </SearchBox>
 
-            <h1 className={styles.h1}>Next Forecast</h1>
-
-            <div className={styles.wrapper}>
-
-            <div className={styles.locationbox}>
-                <div className={styles.city}>
-                    <img src={location} alt="" />
-                    <h3 className={styles.location}> {weather.name}, {weather.sys.country}</h3>
-                </div>
-                <div className={styles.weathercond}>
-                    <h1 className={styles.temperature}>{Math.round(weather.main.temp)}℃</h1>
-                    <img
-                        className={styles.icon}
-                        src={"https://openweathermap.org/img/wn/"+weather.weather[0].icon +".png"}
-                        alt=""
-                    />
-                </div>
-            </div>
-
-            <div className={styles.weatherinfo}>
-                <p className={styles.date}>{dateInfo(new Date())}</p>
-                <h5 className={styles.weather}>{weather.weather[0].main}</h5>
-                    
-            </div>
-            </div>
+            {loading ? (
+        <div>
+          <p>Loading..Please Wait</p>
+          <Loader active inline='centered' />
         </div>
-
-      ) : ('')}
-      
-    </main>
-    </div>
-  );
+      ) : (
+          <div className='content'>
+              <HourlyWrapper className="hourly-wrapper">
+                  <h4>Today's Forecast</h4>
+                  <HourlyContainer>
+                  {hourlyForecast.map((hourlyForecast, index) => 
+                      <HourlyForecast 
+                           hourlyForecast={hourlyForecast}
+                      />
+                   )}
+                </HourlyContainer>
+            </HourlyWrapper>
+              
+              <Footer className="footer">
+                  <Forecast 
+                    forecast={forecast}
+                  />
+                  <Weather 
+                      temprature={temprature}
+                      city={city}
+                      description={description}
+                      icon={icon}
+                  />
+             </Footer>         
+          </div>
+      )}                
+        </Main>
+  
+    )
 }
 
-export default App;
+export default App
