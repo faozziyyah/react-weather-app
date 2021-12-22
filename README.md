@@ -23,6 +23,7 @@ Users should be able to:
 - View the optimal layout for the site depending on their device's screen size
 - View current weather of their location
 - View weather forecast 3 hourly
+- Search the weather details for any location
 
 ### Screenshot
 
