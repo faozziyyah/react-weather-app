@@ -3,17 +3,7 @@ import moment from 'moment';
 import styled from "styled-components";
 import location from '../assets/Location.png';
 import bgimage from '../assets/Rectangle.png';
-
-const WeatherWrapper = styled.aside`
-    background: #8862fc;
-    border-radius: 10px;
-    width: 30%;
-    height: 205px;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    margin-top: 5em;
-`;
+import styles from "../css/Page.Module.css";
 
 const WeatherTop = styled.header`
     background: url(${bgimage});
@@ -80,7 +70,7 @@ width: 30%;
 function Weather({temprature, city, description, icon}) {
 
     return (
-        <WeatherWrapper className="wrapper">
+        <aside className={styles.wrapper}>
 
             <WeatherTop className="locationbox">
                 <City className="city">
@@ -102,7 +92,7 @@ function Weather({temprature, city, description, icon}) {
                 <h5 className="weather">{description} </h5>
                     
             </WeatherInfo>
-            </WeatherWrapper>
+            </aside>
     )
 }
 

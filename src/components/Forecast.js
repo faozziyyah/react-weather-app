@@ -1,6 +1,7 @@
 import moment from 'moment';
 import React from 'react'
 import styled from "styled-components";
+import styles from "../css/Page.Module.css";
 
 const ForecastContainer = styled.footer`
     display: flex;
@@ -49,7 +50,7 @@ const ForecastLine = styled.hr`
 
 function Forecast({forecast}) {
     return (
-        <ForecastContainer className="forecast-container">
+        <ForecastContainer className={styles.forecastcontainer}>
             <ForecastHeader className="forecast-heading">
                 <h4>Next Forecast</h4>
                 <ForecastDays className="forecast-days">Five Days</ForecastDays>
