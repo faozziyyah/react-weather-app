@@ -3,13 +3,6 @@ import React from 'react'
 import styled from "styled-components";
 import styles from "../css/Page.Module.css";
 
-const ForecastContainer = styled.footer`
-    display: flex;
-    width: 40%;
-    flex-direction: column;
-    color: #fff;
-`;
-
 const ForecastHeader = styled.header`
     display: flex;
     justify-content: space-between;
@@ -50,7 +43,7 @@ const ForecastLine = styled.hr`
 
 function Forecast({forecast}) {
     return (
-        <ForecastContainer className={styles.forecastcontainer}>
+        <section className={styles.forecastcontainer}>
             <ForecastHeader className="forecast-heading">
                 <h4>Next Forecast</h4>
                 <ForecastDays className="forecast-days">Five Days</ForecastDays>
@@ -69,7 +62,7 @@ function Forecast({forecast}) {
                     )
                 })}
             </ForecastMain>
-        </ForecastContainer>
+        </section>
     )
 }
 

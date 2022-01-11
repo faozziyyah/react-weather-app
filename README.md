@@ -26,6 +26,7 @@ Users should be able to:
 
 ### Screenshot
 
+![](src/assets/screenshot.png)
 ![](src/assets/screenshot1.png)
 
 

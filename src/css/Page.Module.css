@@ -125,6 +125,13 @@
     border-radius: 10px;
 }
 
+.forecastcontainer{
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+   color: #fff;
+}
+
 .footer{
     width: 90%;
     margin: auto;
@@ -152,6 +159,7 @@
         align-items: center;
         text-align: center;
     }
+
     .footer{
         display: flex;
     }
@@ -175,15 +183,15 @@
         text-align: center;
     }
 
-    .forecastcontainer{
-        width: 90%;
-    }
-
     .details{
         flex-direction: column;
     }
 
     .wrapper{
+        width: 100%;
+    }
+
+    .forecastcontainer{
         width: 100%;
     }
     
